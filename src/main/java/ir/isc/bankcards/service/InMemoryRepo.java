@@ -3,9 +3,12 @@ package ir.isc.bankcards.service;
 
 // This class is the answer of third and forth items of the Assignment file.
 
+import ir.isc.bankcards.entity.CardType;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class InMemoryRepo {
@@ -35,13 +38,14 @@ public class InMemoryRepo {
             log.error("Incorrect card. Three factors should be entered.");
         } else if (!melliCode.matches("^\\d{10}$")) {
             log.error("MelliCodes have exactly 10 digits.");
-        } else if (!(card[0].equalsIgnoreCase("cash") || card[0].equalsIgnoreCase("credit"))) {
+        } else if (!(card[0].equalsIgnoreCase(CardType.CASH.name()) || card[0].equalsIgnoreCase(CardType.CREDIT.name()))) {
             log.error("Invalid CardType. Enter CASH or CREDIT as the first arg.");
         } else if (card[1].length() != 6) {
             log.error("IssuerCode should be exactly of 6 digits.");
         } else if (card[2].length() != 16 || card[2].startsWith("0")) {
             log.error("Incorrect card number.");
         } else if (getAllCardNumbers().contains(card[2])) {
+            
             log.error("card number is duplicated.");
         } else {
             ArrayList<String[]> cards = (cardToPersonMap.get(melliCode) != null) ? cardToPersonMap.get(melliCode) : new ArrayList<>();
@@ -68,32 +72,32 @@ public class InMemoryRepo {
     static {
 
 
-        putCard("0012365478", new String[]{"CASH", "071078", "6037997145632140"});
-        putCard("0012365478", new String[]{"CASH", "123145", "5892997145632140"});
-        putCard("0012365478", new String[]{"CREDIT", "123145", "5892997145632140"});
-        putCard("0012365478", new String[]{"CASH", "864201", "5892997145632140"});
-        putCard("0012365478", new String[]{"CREDIT", "908903", "5892997145632140"});
+        putCard("0012365478", new String[]{CardType.CASH.name(), "071078", "6037997145632140"});
+        putCard("0012365478", new String[]{CardType.CASH.name(), "123145", "5892997145632140"});
+        putCard("0012365478", new String[]{CardType.CREDIT.name(), "123145", "5892997145632140"});
+        putCard("0012365478", new String[]{CardType.CASH.name(), "864201", "5892997145632140"});
+        putCard("0012365478", new String[]{CardType.CREDIT.name(), "908903", "5892997145632140"});
 
 
-        putCard("1012365477", new String[]{"CASH", "071078", "6037997145632141"});
-        putCard("1012365477", new String[]{"CASH", "123145", "5892997145632141"});
-        putCard("1012365477", new String[]{"CREDIT", "123145", "5892997145632141"});
-        putCard("1012365477", new String[]{"CASH", "864201", "5892997145632141"});
-        putCard("1012365477", new String[]{"CREDIT", "908903", "5892997145632141"});
+        putCard("1012365477", new String[]{CardType.CASH.name(), "071078", "6037997145632141"});
+        putCard("1012365477", new String[]{CardType.CASH.name(), "123145", "5892997145632141"});
+        putCard("1012365477", new String[]{CardType.CREDIT.name(), "123145", "5892997145632141"});
+        putCard("1012365477", new String[]{CardType.CASH.name(), "864201", "5892997145632141"});
+        putCard("1012365477", new String[]{CardType.CREDIT.name(), "908903", "5892997145632141"});
 
 
-        putCard("2012365477", new String[]{"CASH", "071078", "6037997145632142"});
-        putCard("2012365477", new String[]{"CASH", "123145", "5892997145632142"});
-        putCard("2012365477", new String[]{"CREDIT", "123145", "5892997145632142"});
-        putCard("2012365477", new String[]{"CASH", "864201", "5892997145632142"});
-        putCard("2012365477", new String[]{"CREDIT", "908903", "5892997145632142"});
+        putCard("2012365477", new String[]{CardType.CASH.name(), "071078", "6037997145632142"});
+        putCard("2012365477", new String[]{CardType.CASH.name(), "123145", "5892997145632142"});
+        putCard("2012365477", new String[]{CardType.CREDIT.name(), "123145", "5892997145632142"});
+        putCard("2012365477", new String[]{CardType.CASH.name(), "864201", "5892997145632142"});
+        putCard("2012365477", new String[]{CardType.CREDIT.name(), "908903", "5892997145632142"});
 
 
-        putCard("3012365477", new String[]{"CASH", "071078", "6037997145632143"});
-        putCard("3012365477", new String[]{"CASH", "123145", "5892997145632143"});
-        putCard("3012365477", new String[]{"CREDIT", "123145", "5892997145632143"});
-        putCard("3012365477", new String[]{"CASH", "864201", "5892997145632143"});
-        putCard("3012365477", new String[]{"CREDIT", "908903", "5892997145632143"});
+        putCard("3012365477", new String[]{CardType.CASH.name(), "071078", "6037997145632143"});
+        putCard("3012365477", new String[]{CardType.CASH.name(), "123145", "5892997145632143"});
+        putCard("3012365477", new String[]{CardType.CREDIT.name(), "123145", "5892997145632143"});
+        putCard("3012365477", new String[]{CardType.CASH.name(), "864201", "5892997145632143"});
+        putCard("3012365477", new String[]{CardType.CREDIT.name(), "908903", "5892997145632143"});
 
         System.out.println("Card To Person Map: " + cardToPersonMap);
 

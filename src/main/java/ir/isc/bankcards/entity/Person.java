@@ -15,16 +15,22 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+
     @Column(name = "NAME")
     private String name;
+
     @Column(name = "FAMILY")
     private String family;
+
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
-    @Column(name = "MELLI_CODE", length = 10)
+
+    @Column(name = "MELLI_CODE", length = 10, unique = true)
     private String melliCode;
+
     @Column(name = "ADDRESS")
-    private String Address;
+    private String address;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Card> cards = new HashSet<>();
 
