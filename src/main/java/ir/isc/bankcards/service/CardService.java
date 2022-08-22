@@ -55,8 +55,14 @@ public class CardService {
         return cardResponse;
     }
 
-    public Card saveCard(Card card){
-        return cardRepository.save(card);
+    public void saveCard(Card card) {
+        if(!card.getCardNumber().matches("\\d{16}")) {
+            log.error("card number must have exactly 16 digits");
+        } else if(!String.valueOf(card.getIssuerCode()).matches("\\d{6}")) {
+            log.error("issuerCode must have exactly 6 digits.");
+        }
+        else
+        cardRepository.save(card);
 
     }
 

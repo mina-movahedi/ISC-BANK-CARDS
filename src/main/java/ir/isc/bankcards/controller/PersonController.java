@@ -26,12 +26,15 @@ public class PersonController {
     @PostMapping(value = "/savePerson", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> savePerson(@RequestBody Person person){
         try {
-            personService.savePerson(person);
+            Person savedPerson = personService.savePerson(person);
+            if(savedPerson == null || savedPerson.getId() == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("MelliCode must have exactly 10 digits.");
+            }
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("The person has been successfully saved");
         }catch (Exception e) {
             e.printStackTrace();
             log.error("An error occurred and the person could not be saved.");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("The person could not be saved. Maybe it is duplicated or something else.");
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("The person has been successfully saved");
     }
 }
