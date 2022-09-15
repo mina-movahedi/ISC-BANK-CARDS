@@ -1,6 +1,8 @@
 package ir.isc.bankcards.service;
 
 import ir.isc.bankcards.entity.Card;
+import ir.isc.bankcards.entity.CardDto;
+import ir.isc.bankcards.entity.CardType;
 import ir.isc.bankcards.entity.Person;
 import ir.isc.bankcards.model.CardResponse;
 import ir.isc.bankcards.model.Status;
@@ -8,6 +10,8 @@ import ir.isc.bankcards.repository.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -36,7 +40,7 @@ public class CardService {
     public CardResponse getCardResponse(String cardNumber, String melliCode) {
         Card card;
         CardResponse cardResponse = new CardResponse();
-        Person person = personService.getPerson(melliCode);
+        Person person = personService.getPersonByMelliCode(melliCode);
         if (person == null || person.getId() == null) {
             cardResponse.setStatus(Status.MELLI_CODE_NOT_FOUND);
             return cardResponse;
@@ -55,15 +59,49 @@ public class CardService {
         return cardResponse;
     }
 
-    public void saveCard(Card card) {
-        if(!card.getCardNumber().matches("\\d{16}")) {
+    public Card cardDtoToCard(CardDto cardDto){
+        Person personByMelliCode;
+        try {
+            personByMelliCode = personService.getPersonByMelliCode(cardDto.getOwnerMelliCode());
+            if(personByMelliCode == null || personByMelliCode.getId() == null) {
+                log.error("There is no person with this melliCode.");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Person could not be fetched.");
+            return null;
+        }
+        Card card = new Card();
+        card.setCardNumber(cardDto.getCardNumber());
+        card.setIssuerCode(cardDto.getIssuerCode());
+        card.setIssuerName(cardDto.getIssuerName());
+        card.setAccountNumber(cardDto.getAccountNumber());
+        card.setActive(cardDto.getIsActive() == 1);
+        card.setExpirationDate(cardDto.getExpirationDate());
+        card.setOwner(personByMelliCode);
+
+        card.setCardType(CardType.getCardType(cardDto.getCardType()));
+        return card;
+    }
+
+    public Card saveCard(CardDto cardDto) {
+        if(!cardDto.getCardNumber().matches("\\d{16}")) {
             log.error("card number must have exactly 16 digits");
-        } else if(!String.valueOf(card.getIssuerCode()).matches("\\d{6}")) {
+        } else if(!String.valueOf(cardDto.getIssuerCode()).matches("\\d{6}")) {
             log.error("issuerCode must have exactly 6 digits.");
         }
-        else
-        cardRepository.save(card);
+        else{
+            Card card = cardDtoToCard(cardDto);
+            if(card != null && card.getCardNumber() != null) {
+                return cardRepository.save(card);
+            }
+        }
+        return null;
+    }
 
+    public List<Card> getAllCards(String melliCode){
+        return cardRepository.getAllByMelliCode(melliCode);
     }
 
 }

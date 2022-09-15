@@ -17,17 +17,17 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public Person getPerson(String melliCode){
-        if(melliCode.matches("^\\d{10}$")) {
-        return personRepository.findByMelliCode(melliCode);
-    }else log.error("MelliCodes must have exactly 10 digits.");
+    public Person getPersonByMelliCode(String melliCode) {
+        if (melliCode.matches("^\\d{10}$")) {
+            return personRepository.findByMelliCode(melliCode);
+        } else log.error("MelliCodes must have exactly 10 digits.");
         return new Person();
     }
 
     public Person savePerson(Person person) {
-        if(person.getMelliCode().matches("^\\d{10}$")) {
+        if (person.getMelliCode().matches("^\\d{10}$")) {
             return personRepository.save(person);
-        }else {
+        } else {
             log.error("MelliCodes must have exactly 10 digits.");
             return new Person();
         }
