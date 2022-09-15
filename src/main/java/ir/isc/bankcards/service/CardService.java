@@ -101,7 +101,6 @@ public class CardService {
     }
 
     public List<Card> getAllCards(String melliCode){
-        System.out.println("melliCode: " + melliCode);
         List<Card> allByMelliCode;
         try{
             allByMelliCode = cardRepository.findAllCardsByMelliCode(melliCode);
