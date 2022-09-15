@@ -1,12 +1,14 @@
 package ir.isc.bankcards.model;
 
-import ir.isc.bankcards.entity.Card;
-import lombok.Data;
+import ir.isc.bankcards.entity.CardDto;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 public class CardsDto {
 
-    List<Card> cardList;
+    List<CardDto> cardDtoList;
 }

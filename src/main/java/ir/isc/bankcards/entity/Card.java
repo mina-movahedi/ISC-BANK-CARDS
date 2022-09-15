@@ -1,13 +1,15 @@
 package ir.isc.bankcards.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "CARD", uniqueConstraints = {@UniqueConstraint(columnNames = {"issuer_Code", "card_Type", "card_Number"})})
-@Data
+@Setter
+@Getter
 public class Card {
 
     @Id

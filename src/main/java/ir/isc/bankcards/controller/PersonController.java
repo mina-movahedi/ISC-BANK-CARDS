@@ -23,6 +23,21 @@ public class PersonController {
     }
 
     // It was better to have a PersonDto too and use it for savePerson() arg instead of person.
+
+    /*
+    * sample json for sending request:
+    *
+    * {
+         "name": "Tghi",
+         "family": "Taghavi",
+         "phoneNumber": "0345456987",
+         "melliCode": "4512365478",
+         "address": "bbbbbbb"
+        }
+    *
+    * */
+
+
     @PostMapping(value = "/savePerson", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> savePerson(@RequestBody Person person){
         try {

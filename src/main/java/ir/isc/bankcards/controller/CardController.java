@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -27,10 +28,18 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    /* Get only one card with some parameters. */
+    /* Get only one card with some parameters.
+    *
+    * sample json for request:
+    *
+        {
+          "melliCode": "0012365478",
+          "cardNumber": "1478523045626595"
+        }
+    *
+    * */
     @PostMapping(value = "/getCard", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CardResponse> getCard(@RequestBody CardRequest request) {
-        System.out.println("In the name of Allah.");
         CardResponse cardResponse = cardService.getCardResponse(request.getCardNumber(), request.getMelliCode());
         if (cardResponse.getStatus() != null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(cardResponse);
@@ -39,12 +48,19 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(cardResponse);
     }
 
-    /* To get all person's cards */
+    /* To get all person's cards
+    *
+    * sample URI: http://localhost:8088/getAllCards/0012365478
+    *
+    * */
     @GetMapping(value = "/getAllCards/{melliCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CardsDto> getAllCards(@PathVariable String melliCode) {
         List<Card> allCards = cardService.getAllCards(melliCode);
         CardsDto cardsDto = new CardsDto();
-        cardsDto.setCardList(allCards);
+        List<CardDto> cardDtoList = new ArrayList<>();
+
+        allCards.forEach(a -> cardDtoList.add(cardService.cardToCardDto(a)));
+        cardsDto.setCardDtoList(cardDtoList);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(cardsDto);
     }
 

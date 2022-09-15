@@ -27,9 +27,9 @@ public class CardService {
         this.personService = personService;
     }
 
-    public Card getCardByPersonAndNumber(Long personId, String cardNumber) {
+    public Card getCardByPersonAndNumber(Person owner, String cardNumber) {
         try {
-            return cardRepository.findByOwnerAndCardNumber(personId, cardNumber);
+            return cardRepository.findByOwnerAndCardNumber(owner, cardNumber);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("An error occurred during fetching card from data base.");
@@ -45,7 +45,7 @@ public class CardService {
             cardResponse.setStatus(Status.MELLI_CODE_NOT_FOUND);
             return cardResponse;
         }
-        card = getCardByPersonAndNumber(person.getId(), cardNumber);
+        card = getCardByPersonAndNumber(person, cardNumber);
         if (card == null || card.getCardNumber() == null) {
             cardResponse.setStatus(Status.CARD_NUMBER_NOT_FOUND);
             return cardResponse;
@@ -101,7 +101,33 @@ public class CardService {
     }
 
     public List<Card> getAllCards(String melliCode){
-        return cardRepository.getAllByMelliCode(melliCode);
+        System.out.println("melliCode: " + melliCode);
+        List<Card> allByMelliCode;
+        try{
+            allByMelliCode = cardRepository.findAllCardsByMelliCode(melliCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return allByMelliCode;
+    }
+
+    public CardDto cardToCardDto(Card card){
+        if(card ==null || card.getCardNumber() == null) {
+            log.error("There is an error with card..");
+            return null;
+        }
+        CardDto cardDto = new CardDto();
+        cardDto.setCardNumber(card.getCardNumber());
+        cardDto.setIssuerCode(card.getIssuerCode());
+        cardDto.setIssuerName(card.getIssuerName());
+        cardDto.setAccountNumber(card.getAccountNumber());
+        cardDto.setIsActive(cardDto.getIsActive());
+        cardDto.setExpirationDate(card.getExpirationDate());
+        cardDto.setOwnerMelliCode(card.getOwner().getMelliCode());
+
+        card.setCardType(CardType.getCardType(cardDto.getCardType()));
+        return cardDto;
     }
 
 }
